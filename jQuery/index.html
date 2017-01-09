@@ -1,22 +1,341 @@
 <!doctype html>
+
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Dropdown</title>
-	
-</head>
-<body>
+<meta charset="utf-8">
+<!--ηιкнιℓ ѕαηкαя-->	
+<title>Project Details</title>
+<link rel="stylesheet" href="jquery-ui.css">
+<link rel="stylesheet" href="flag.css">
+<script src="jquery-1.9.1.js"></script>
+<script src="jquery-ui.js"></script>
+<style>
 
-<p>Select from Dropdown</p>
-<div id="wraparound">
-<select name="countries" id="count">
-<option value="af">Afghanistan</option>
-<option value="in">India</option>
-<option value="us">USA</option>
-<option value="ca">Canada</option>
-<option value="fr">France</option>
-<option value="tv">Tuvalu</option>
+body {
+background-color: #2E282A;
+}
+
+h1 {
+color: #EF3E36;
+text-align:center;
+text-shadow: -1px -1px #aa3030;
+}
+
+.custom-combobox {
+    position: absolute;
+    display: inline-block;
+    margin-left: 10px;
+	padding: 1px;
+    }
+	
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -11px;
+	margin-top: 0px;
+    padding: 0;
+	height: 33px;
+	display: inline-block;
+  }
+  .custom-combobox-input {
+    margin: 0;
+    padding: 5px 10px;
+  }
+
+.center {
+   width: 300px;
+   height: 300px;
+   margin: 0 auto;
+}
+
+#detz {
+	margin-top: -200px;
+	text-align:center;
+	color: #DBAD6A;
+	font-size: 18px;
+}
+   
+
+   
+<!-- .ui-autocomplete {
+ 
+		max-height: 300px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	} -->
+	
+footer {
+  text-align: center;
+  color: white;
+}
+
+html, body {
+	height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+}
+
+
+a {
+  color: purple;
+  text-decoration: none;
+}
+
+</style>
+
+<!--[if IE]>
+<style type="text/css">
+
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+	margin-top: 1px;
+    margin-left: -11px;
+    padding: 0;
+	height: 33px;
+	display: inline-block;
+  }
+  
+  #detz {
+      margin-top: -80px;
+	  font-family: cursive;
+   }
+   
+   .centre {
+   margin-top: 120px;
+   }
+   
+.script span {
+  background : transparent;
+  padding: 0 0.3em;
+}
+   
+</style>
+
+<script>
+
+$(window).load(function() {
+  
+  var color = ['#2E282A', '#000000', '#111111'];
+  
+  $('body').css('background-color', color[Math.floor(Math.random() *  color.length)]);
+  
+});
+
+</script>
+
+<![endif]-->
+
+</head>
+
+<body>
+<div id="wrapper">
+<h1>Country</br>DATABASE</h1>
+
+<div class = "center">
+<div class="ui-widget">
+<p style="color: #17BEBB; text-align:center; font-size: 20px; font-weight: 900;">Select The Project: </p>
+<select size="10" id="country" placeholder="Select From The List or Type in This Box">
+<option value="">Select one...</option>
+
+<option value="a-af">Afghanistan</option>
+
 </select>
-</div>	
+</div>
+</div>
+
+<p id="detz">Or Type The Country Name in the Above Box</p>
+</div> 
+
+<footer>
+<h4>created by Nikhil Sankar</h4>
+</footer> 
+
+<script>
+
+
+
+
+ $('.c').mouseenter(function(){
+    if($(this).hasClass('cycling')==false){ 
+        $(this).charcycle({'target':'#text'});  
+    }
+  });
+
+  
+var project = new Array("Capital = ", "Currency = ", "Official Language = ", "Unit System = ", "Regional Boiler Code = ", "ASME Applicability = ")
+
+
+var AU = new Array("Canberra", "Australian Dollar", "English", "Metric System", "AS 1228", "ASME accepted with local authority approval");
+
+(function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Projects" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.autocomplete( "instance" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery );
+ 
+$(document).ready(function() {
+$("#country").combobox({
+select: function(event, ui) {
+var selectcount =this.value;
+switch(selectcount){
+
+
+case	"a-af":	detail(AU);	break;
+
+default:
+	$("#detz").empty();
+	$("#detz").append("<p>Error? Contact Admin</p>");
+break;
+}
+}
+});
+
+function detail(arr) {
+  $("#detz").empty();
+  $("#detz").append("<p><b><u>Details of Selected Project</u></b></p>");
+  $(arr).each(function(i){
+		$("#detz").append("<p>"+"<b>"+project[i]+"</b>"+arr[i]+"</p>")
+	});
+}
+}
+);  
+  
+  
+  
+</script>
+
+
 </body>
-</html>
+  </html>
+  
